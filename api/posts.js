@@ -4,7 +4,7 @@ const mysql = require('mysql')
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    const query = 'SELECT * FROM post;';
+    const query = 'SELECT * FROM post ORDER BY id DESC;';
     const connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
@@ -66,7 +66,9 @@ router.post('/', (req, res) => {
         }
         const location = req.protocol + '://' + req.get('host') + req.originalUrl + '/' +results.insertId;
         res.setHeader('Location', location);
-        res.status(201).json();
+        const body = req.body;
+        body.id = results.insertId;
+        res.status(201).json(body);
     });
     connection.end();
 });
